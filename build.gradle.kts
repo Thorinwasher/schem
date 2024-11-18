@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "dev.thorinwasher.schem"
-version = System.getenv("TAG_VERSION") ?: "dev"
+version = System.getenv("SCHEM_VERSION") ?: "dev"
 description = "Schematic reader and writer for paper"
 
 repositories {
