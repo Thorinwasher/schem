@@ -1,7 +1,6 @@
-package net.hollowcube.schem.demo;
+package dev.thorinwasher.schem.demo;
 
-import net.hollowcube.schem.Rotation;
-import net.hollowcube.schem.SchematicReader;
+import dev.thorinwasher.schem.SchematicReader;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.builder.Command;

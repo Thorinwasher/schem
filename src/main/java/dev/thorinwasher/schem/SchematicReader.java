@@ -1,12 +1,11 @@
-package net.hollowcube.schem;
+package dev.thorinwasher.schem;
 
 
-import net.hollowcube.schem.blockpalette.BlockPaletteParser;
-import net.hollowcube.schem.blockpalette.CommandBlockPaletteParser;
+import dev.thorinwasher.schem.blockpalette.BlockPaletteParser;
+import dev.thorinwasher.schem.blockpalette.CommandBlockPaletteParser;
 import net.kyori.adventure.nbt.BinaryTagIO;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.IntBinaryTag;
-import net.minestom.server.command.builder.arguments.minecraft.ArgumentBlockState;
 import net.minestom.server.command.builder.exception.ArgumentSyntaxException;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;

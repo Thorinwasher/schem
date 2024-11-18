@@ -1,4 +1,4 @@
-package net.hollowcube.schem;
+package dev.thorinwasher.schem;
 
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;
@@ -6,8 +6,10 @@ import net.minestom.server.instance.batch.BatchOption;
 import net.minestom.server.instance.batch.RelativeBlockBatch;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Utils;
+import org.bukkit.block.data.BlockData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3i;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -20,14 +22,12 @@ import java.util.function.UnaryOperator;
  */
 @SuppressWarnings("UnstableApiUsage")
 public record Schematic(
-        Point size,
-        Point offset,
-        Block[] palette,
+        Vector3i size,
+        Vector3i offset,
+        BlockData[] palette,
         byte[] blocks
 ) {
     private static final System.Logger logger = System.getLogger(Schematic.class.getName());
-
-    static final Schematic EMPTY = new Schematic(Vec.ZERO, Vec.ZERO, new Block[0], new byte[0]);
 
     public Schematic {
         palette = Arrays.copyOf(palette, palette.length);

@@ -1,4 +1,4 @@
-package net.hollowcube.schem;
+package dev.thorinwasher.schem;
 
 public class SchematicReadException extends RuntimeException {
 

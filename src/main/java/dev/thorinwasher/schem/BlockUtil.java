@@ -1,4 +1,4 @@
-package net.hollowcube.schem;
+package dev.thorinwasher.schem;
 
 import net.minestom.server.instance.block.Block;
 import org.jetbrains.annotations.NotNull;

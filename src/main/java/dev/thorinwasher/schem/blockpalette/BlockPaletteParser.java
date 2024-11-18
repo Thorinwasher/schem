@@ -1,4 +1,4 @@
-package net.hollowcube.schem.blockpalette;
+package dev.thorinwasher.schem.blockpalette;
 
 import net.minestom.server.instance.block.Block;
 
