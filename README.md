@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/github/license/Minestom/MinestomDataGenerator.svg)](LICENSE)
 
 A schematic reader library for paper and other bukkit forks. The library can read Sponge schematics versions 1-3. This 
-is a fork of https://github.com/hollow-cube/schem
+is a fork of https://github.com/hollow-cube/schem which has been repurposed a bit
 
 ## Install
 
@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'dev.thorinwasher:schem:<see releases>'
+    implementation 'dev.thorinwasher.schem:schem-reader:<see releases>'
 }
 ```
 ## Contributing
