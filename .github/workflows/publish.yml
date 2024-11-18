@@ -19,8 +19,8 @@ jobs:
       - name: Publish package
         run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
         env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.OSSRH_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.OSSRH_TOKEN }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USR }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.KEY_PASS }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.PRIV_KEY }}
           REWRITE_VERSION: ${{ github.event.release.tag_name }}
