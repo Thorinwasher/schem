@@ -58,11 +58,14 @@ public record Schematic(
      * @param applicator     The function to call for each block in the schematic.
      */
     public void apply(@NotNull Matrix3d transformation, @NotNull BiConsumer<Vector3i, BlockData> applicator) {
-        var blocks = ByteBuffer.wrap(this.blocks);
+        ByteBuffer blocks = ByteBuffer.wrap(this.blocks);
+        BlockData[] transformedPalette = Arrays.stream(palette)
+                .map(blockData -> BlockUtil.transformBlockData(blockData, transformation))
+                .toArray(BlockData[]::new);
         for (int y = 0; y < size().y(); y++) {
             for (int z = 0; z < size().z(); z++) {
                 for (int x = 0; x < size().x(); x++) {
-                    BlockData block = palette[ReadUtils.readVarInt(blocks)];
+                    BlockData block = transformedPalette[ReadUtils.readVarInt(blocks)];
                     if (block == null) {
                         logger.log(System.Logger.Level.WARNING, "Missing palette entry at {0}, {1}, {2}", x, y, z);
                         block = Material.AIR.createBlockData();
@@ -70,7 +73,7 @@ public record Schematic(
 
                     applicator.accept(
                             transform(new Vector3i(x, y, z).add(offset), transformation),
-                            BlockUtil.transformBlockData(block, transformation));
+                            block);
                 }
             }
         }
