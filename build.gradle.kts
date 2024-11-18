@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
+    compileOnly("net.kyori:adventure-nbt:4.17.0")
     implementation("org.joml:joml:1.10.8")
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))

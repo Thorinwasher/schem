@@ -1,26 +1,20 @@
 package dev.thorinwasher.schem;
 
-import net.minestom.server.coordinate.Point;
-import net.minestom.server.coordinate.Vec;
-import net.minestom.server.instance.batch.BatchOption;
-import net.minestom.server.instance.batch.RelativeBlockBatch;
-import net.minestom.server.instance.block.Block;
-import net.minestom.server.utils.Utils;
+import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3d;
+import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.UnaryOperator;
 
 /**
  * Represents a schematic file which can be manipulated in the world.
  */
-@SuppressWarnings("UnstableApiUsage")
 public record Schematic(
         Vector3i size,
         Vector3i offset,
@@ -35,7 +29,7 @@ public record Schematic(
     }
 
     @Override
-    public Block @NotNull [] palette() {
+    public BlockData @NotNull [] palette() {
         return Arrays.copyOf(palette, palette.length);
     }
 
@@ -44,62 +38,42 @@ public record Schematic(
         return Arrays.copyOf(blocks, blocks.length);
     }
 
-    public @NotNull Point size(@NotNull Rotation rotation) {
-        return CoordinateUtil.abs(CoordinateUtil.rotatePos(size, rotation));
+    public @NotNull Vector3i size(@NotNull Matrix3d transformation) {
+        return transform(size, transformation);
     }
 
-    public @NotNull Point offset(@NotNull Rotation rotation) {
-        return CoordinateUtil.rotatePos(offset, rotation);
+    public @NotNull Vector3i offset(@NotNull Matrix3d transformation) {
+        return transform(offset, transformation);
+    }
+
+    private Vector3i transform(Vector3i vector3i, Matrix3d transformation) {
+        Vector3d transformed = transformation.transform(new Vector3d(vector3i)).ceil();
+        return new Vector3i((int) transformed.x, (int) transformed.y, (int) transformed.z);
     }
 
     /**
      * Apply the schematic directly given a rotation. The applicator function will be called for each block in the schematic.
-     * <p>
-     * Note: The {@link Point} passed to `applicator` is relative to the {@link #offset()}.
      *
-     * @param rotation   The rotation to apply before placement.
-     * @param applicator The function to call for each block in the schematic.
+     * @param transformation The transformation to apply before placement.
+     * @param applicator     The function to call for each block in the schematic.
      */
-    public void apply(@NotNull Rotation rotation, @NotNull BiConsumer<Point, Block> applicator) {
+    public void apply(@NotNull Matrix3d transformation, @NotNull BiConsumer<Vector3i, BlockData> applicator) {
         var blocks = ByteBuffer.wrap(this.blocks);
         for (int y = 0; y < size().y(); y++) {
             for (int z = 0; z < size().z(); z++) {
                 for (int x = 0; x < size().x(); x++) {
-                    var block = palette[Utils.readVarInt(blocks)];
+                    BlockData block = palette[ReadUtils.readVarInt(blocks)];
                     if (block == null) {
                         logger.log(System.Logger.Level.WARNING, "Missing palette entry at {0}, {1}, {2}", x, y, z);
-                        block = Block.AIR;
+                        block = Material.AIR.createBlockData();
                     }
 
                     applicator.accept(
-                            CoordinateUtil.rotatePos(offset.add(x, y, z), rotation),
-                            CoordinateUtil.rotateBlock(block, rotation));
+                            transform(new Vector3i(x, y, z).add(offset), transformation),
+                            BlockUtil.transformBlockData(block, transformation));
                 }
             }
         }
-    }
-
-    /**
-     * Convert the schematic into a {@link RelativeBlockBatch} which can be applied to an instance.
-     * The schematic can be rotated around its {@link #offset()} before placement.
-     *
-     * @param rotation      The rotation to apply to the schematic.
-     * @param blockModifier If present, called on each individual block before it is placed.
-     * @return A {@link RelativeBlockBatch} which represents the schematic file at its offset.
-     */
-    public @NotNull RelativeBlockBatch build(@NotNull Rotation rotation, @Nullable UnaryOperator<Block> blockModifier) {
-        RelativeBlockBatch batch = new RelativeBlockBatch(new BatchOption().setCalculateInverse(true));
-        apply(rotation, (pos, block) -> batch.setBlock(pos, blockModifier == null ? block : blockModifier.apply(block)));
-        return batch;
-    }
-
-    public @NotNull RelativeBlockBatch build(@NotNull Rotation rotation, boolean skipAir) {
-        RelativeBlockBatch batch = new RelativeBlockBatch(new BatchOption().setCalculateInverse(true));
-        apply(rotation, (pos, block) -> {
-            if (block.isAir() && skipAir) return;
-            batch.setBlock(pos, block);
-        });
-        return batch;
     }
 
     @Override

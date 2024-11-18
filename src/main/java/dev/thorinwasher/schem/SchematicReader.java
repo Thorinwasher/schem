@@ -1,16 +1,15 @@
 package dev.thorinwasher.schem;
 
 
+import com.google.common.base.Preconditions;
 import dev.thorinwasher.schem.blockpalette.BlockPaletteParser;
 import dev.thorinwasher.schem.blockpalette.CommandBlockPaletteParser;
 import net.kyori.adventure.nbt.BinaryTagIO;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.IntBinaryTag;
-import net.minestom.server.command.builder.exception.ArgumentSyntaxException;
-import net.minestom.server.coordinate.Vec;
-import net.minestom.server.instance.block.Block;
-import net.minestom.server.utils.validate.Check;
+import org.bukkit.block.data.BlockData;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3i;
 
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -67,13 +66,13 @@ public final class SchematicReader {
 
         CompoundBinaryTag metadata = tag.getCompound("Metadata");
 
-        var offset = Vec.ZERO;
+        Vector3i offset = new Vector3i();
         if (metadata.keySet().contains("WEOffsetX")) {
             int offsetX = metadata.getInt("WEOffsetX");
             int offsetY = metadata.getInt("WEOffsetY");
             int offsetZ = metadata.getInt("WEOffsetZ");
 
-            offset = new Vec(offsetX, offsetY, offsetZ);
+            offset.set(offsetX, offsetY, offsetZ);
         } //todo handle sponge Offset
 
         CompoundBinaryTag palette;
@@ -81,36 +80,36 @@ public final class SchematicReader {
         Integer paletteSize;
         if (version == 3) {
             var blockEntries = tag.getCompound("Blocks");
-            Check.notNull(blockEntries, "Missing required field 'Blocks'");
+            Preconditions.checkNotNull(blockEntries, "Missing required field 'Blocks'");
 
             palette = blockEntries.getCompound("Palette");
-            Check.notNull(palette, "Missing required field 'Blocks.Palette'");
+            Preconditions.checkNotNull(palette, "Missing required field 'Blocks.Palette'");
             blockArray = blockEntries.getByteArray("Data");
-            Check.notNull(blockArray, "Missing required field 'Blocks.Data'");
+            Preconditions.checkNotNull(blockArray, "Missing required field 'Blocks.Data'");
             paletteSize = palette.size();
         } else {
             palette = tag.getCompound("Palette");
-            Check.notNull(palette, "Missing required field 'Palette'");
+            Preconditions.checkNotNull(palette, "Missing required field 'Palette'");
             blockArray = tag.getByteArray("BlockData");
-            Check.notNull(blockArray, "Missing required field 'BlockData'");
+            Preconditions.checkNotNull(blockArray, "Missing required field 'BlockData'");
             paletteSize = tag.getInt("PaletteMax");
-            Check.notNull(paletteSize, "Missing required field 'PaletteMax'");
+            Preconditions.checkNotNull(paletteSize, "Missing required field 'PaletteMax'");
         }
 
-        Block[] paletteBlocks = new Block[paletteSize];
+        BlockData[] paletteBlocks = new BlockData[paletteSize];
 
         palette.forEach((entry) -> {
             try {
                 int assigned = ((IntBinaryTag) entry.getValue()).value();
-                Block block = paletteParser.parse(entry.getKey());
+                BlockData block = paletteParser.parse(entry.getKey());
                 paletteBlocks[assigned] = block;
-            } catch (ArgumentSyntaxException e) {
+            } catch (Exception e) {
                 throw new SchematicReadException("Failed to parse block state: " + entry.getKey(), e);
             }
         });
 
         return new Schematic(
-                new Vec(width, height, length),
+                new Vector3i(width, height, length),
                 offset,
                 paletteBlocks,
                 blockArray

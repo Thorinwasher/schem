@@ -1,7 +1,7 @@
 package dev.thorinwasher.schem;
 
-import net.minestom.server.coordinate.Vec;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3i;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,8 +11,8 @@ public class TestSchematicReaderRegressions {
 
     @Test
     public void testReadFail1_20_1() {
-        var schem = assertReadSchematic("/regression/1_20_1_read_fail.schem");
-        assertEquals(new Vec(15, 16, 20), schem.size());
+        Schematic schem = assertReadSchematic("/regression/1_20_1_read_fail.schem");
+        assertEquals(new Vector3i(15, 16, 20), schem.size());
     }
 
 //    @Test

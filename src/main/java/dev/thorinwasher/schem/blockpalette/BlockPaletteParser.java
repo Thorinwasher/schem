@@ -1,7 +1,7 @@
 package dev.thorinwasher.schem.blockpalette;
 
-import net.minestom.server.instance.block.Block;
+import org.bukkit.block.data.BlockData;
 
 public interface BlockPaletteParser {
-    Block parse(String key);
+    BlockData parse(String key);
 }
