@@ -2,12 +2,12 @@
 
 [![license](https://img.shields.io/github/license/Minestom/MinestomDataGenerator.svg)](LICENSE)
 
-A schematic reader and writer library for Minestom. The library can read Sponge schematics versions 1-3, currently
-it always writes as Sponge schematics version 1.
+A schematic reader library for paper and other bukkit forks. The library can read Sponge schematics versions 1-3. This 
+is a fork of https://github.com/hollow-cube/schem
 
 ## Install
 
-Schem is available on [maven central](https://search.maven.org/search?q=g:dev.hollowcube%20AND%20a:schem).
+Schem is available on [maven central](https://search.maven.org/search?q=g:dev.thorinwasher%20AND%20a:schem).
 
 ```groovy
 repositories {
@@ -15,17 +15,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'dev.hollowcube:schem:<see releases>'
+    implementation 'dev.thorinwasher:schem:<see releases>'
 }
 ```
-
-## Usage
-
-todo add me
-
 ## Contributing
 
-Contributions via PRs and issues are always welcome.
+Contributions via PRs and issues are always welcome. 
 
 ## License
 
