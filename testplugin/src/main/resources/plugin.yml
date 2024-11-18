@@ -1,0 +1,4 @@
+main: dev.thorinwasher.schem.testplugin.TestPlugin
+name: TestPlugin
+version: ${version?:unknown}
+api-version: 1.21
