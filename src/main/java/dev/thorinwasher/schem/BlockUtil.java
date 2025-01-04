@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-final class BlockUtil {
+public final class BlockUtil {
     private static final Map<Vector3d, BlockFace> DIRECTION_TO_BLOCK_FACE_MAP = compileFaces();
     private static final Map<Vector3d, Axis> DIRECTION_TO_AXIS_MAP = compileAxis();
 
