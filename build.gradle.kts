@@ -19,17 +19,15 @@ dependencies {
     implementation("net.kyori:adventure-nbt:4.17.0")
     implementation("org.joml:joml:1.10.8")
 
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testImplementation("net.kyori:adventure-nbt:4.17.0")
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.3.1")
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.23.0")
 }
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(21)
 
     withSourcesJar()
-    withJavadocJar()
 }
 
 tasks.test {
@@ -62,6 +60,8 @@ mavenPublishing {
             url.set("https://github.com/Thorinwasher/schem")
         }
     }
-    signAllPublications()
+    if (!project.gradle.startParameter.taskNames.any { it.contains("publishToMavenLocal") }) {
+        signAllPublications()
+    }
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 }
