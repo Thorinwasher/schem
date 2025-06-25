@@ -17,7 +17,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
     implementation("net.kyori:adventure-nbt:4.17.0")
-    implementation("org.joml:joml:1.10.8")
+    compileOnly("org.joml:joml:1.10.8")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testImplementation("net.kyori:adventure-nbt:4.17.0")
